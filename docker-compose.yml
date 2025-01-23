@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backlogOptimizerBackend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backlogOptimizerBackend:/app
+    command: uvicorn server:app --host 0.0.0.0 --port 8000
+
+  frontend:
+    build:
+      context: ./backlogOptimizerFrontend
+    working_dir: /app
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./backlogOptimizerFrontend:/app
+      - /app/node_modules
+    command: npm run dev -- --host 0.0.0.0  # Add --host 0.0.0.0 to make it accessible externally
