@@ -14,14 +14,13 @@ class Optimizer():
         "Sports": 0.5
     }
 
-    owned_consoles = ["Switch", "XBOX One"]
-
     genre_cap = {"Indie": 3, "Adventure": 2, "Third-Person Shooter": 1}
 
-    def __init__(self, games: List[Game], budget: float, max_time: float):
+    def __init__(self, games: List[Game], budget: float, max_time: float, owned_consoles: List[str]):
         self.games = games 
         self.budget = budget
         self.max_time = max_time
+        self.owned_consoles = owned_consoles
 
     @staticmethod
     def calculate_weighted_score(game: Game, genre_weights):

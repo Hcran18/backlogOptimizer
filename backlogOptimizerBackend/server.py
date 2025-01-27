@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from model.optimizationRequest import OptimizationRequest
 
 from service.optimizer import Optimizer
+import time
 
 app = FastAPI()
 
@@ -21,6 +22,13 @@ def read_root():
 
 @app.post("/optimize/")
 def read_root(request: OptimizationRequest):
-    optimizer = Optimizer(request.games, request.budget, request.max_time)
+    start_time = time.time()
+    
+    optimizer = Optimizer(request.games, request.budget, request.max_time, request.owned_consoles)
     result = optimizer.optimize()
+    
+    end_time = time.time()
+    optimization_time = end_time - start_time
+    print(f"Optimization took {optimization_time} seconds")
+    
     return result

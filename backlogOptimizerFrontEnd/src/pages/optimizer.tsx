@@ -1,36 +1,41 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { MultiSelect, type Option } from "@/components/ui/multiSelect"
 
 interface GameData {
     name: string;
-    price: number;
-    average_time: number;
+    price: number | '';
+    average_time: number | '';
     genres: string[];
-    score: number;
+    score: number | '';
     available_consoles: string[];
 }
 
 const Optimizer: React.FC = () => {
     const [games, setGames] = useState<GameData[]>([
-        { name: '', price: 0, average_time: 0, genres: [], score: 0, available_consoles: [] }
+        { name: '', price: '', average_time: '', genres: [], score: '', available_consoles: [] }
     ]);
     const [optimizedGames, setOptimizedGames] = useState<GameData[]>([]);
     const [budget, setBudget] = useState<number | null>(null);
     const [maxTime, setMaxTime] = useState<number | null>(null);
+    const [owned_consoles, setOwnedConsoles] = useState<Option[]>([]);
+
+    const consoleOptions: Option[] = [
+        { value: "Switch", label: "Switch" },
+        { value: "XBOX One", label: "Xbox One" },
+    ]
 
     const handleInputChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         const newGames = [...games];
     
-        if (name === 'genres' || name === 'available_consoles') {
-            newGames[index] = { 
-                ...newGames[index], 
-                [name]: value.split(',').map(item => item.trim())
-            };
-        } else {
-            newGames[index] = { ...newGames[index], [name]: value };
-        }
+        newGames[index] = {
+            ...newGames[index],
+            [name]: name === 'price' || name === 'average_time' || name === 'score' 
+                ? value === '' ? '' : parseFloat(value) 
+                : value
+        };
     
         setGames(newGames);
     };
@@ -110,6 +115,7 @@ const Optimizer: React.FC = () => {
             games,
             budget,
             max_time: maxTime,
+            owned_consoles: owned_consoles.map(option => option.value)
         };
 
         const requestOptions = {
@@ -133,93 +139,118 @@ const Optimizer: React.FC = () => {
     };
 
     return (
-        <div className='p-2 m-2'>
-            <h1 className='p-2'>Backlog Optimizer</h1>
-            <div className='mb-4'>
+        <div className="p-4 m-4">
+            <h1 className="p-2 text-xl font-bold text-center">Backlog Optimizer</h1>
+            <div className="mb-6 flex flex-col items-center space-y-4">
                 <Input
-                    type="number"
-                    placeholder="Enter budget"
-                    value={budget ?? ''}
-                    onChange={(e) => setBudget(Number(e.target.value))}
-                    className='p-2 m-2 text-black placeholder-gray-500'
+                type="number"
+                placeholder="Enter budget"
+                value={budget ?? ""}
+                onChange={(e) => setBudget(Number(e.target.value))}
+                className="w-64 p-2 text-black placeholder-gray-500 border border-gray-300 rounded-lg"
                 />
                 <Input
-                    type="number"
-                    placeholder="Enter max time"
-                    value={maxTime ?? ''}
-                    onChange={(e) => setMaxTime(Number(e.target.value))}
-                    className='p-2 m-2 text-black placeholder-gray-500'
+                type="number"
+                placeholder="Enter max time"
+                value={maxTime ?? ""}
+                onChange={(e) => setMaxTime(Number(e.target.value))}
+                className="w-64 p-2 text-black placeholder-gray-500 border border-gray-300 rounded-lg"
+                />
+                <MultiSelect
+                options={consoleOptions}
+                selected={owned_consoles}
+                onChange={(selected) => {
+                    setOwnedConsoles(selected);
+                }}
+                placeholder="Select owned consoles"
                 />
             </div>
+
             {games.map((game, index) => (
-            <div key={index}>
+                <div
+                key={index}
+                className="p-4 m-4 border border-gray-300 rounded-lg shadow-sm space-y-2"
+                >
+                <div className="grid grid-cols-2 gap-4">
+                    <Input
+                    type="text"
+                    name="name"
+                    placeholder="Name of the game"
+                    value={game.name}
+                    onChange={(e) => handleInputChange(index, e)}
+                    className="w-full p-2 text-black placeholder-gray-500 border border-gray-300 rounded-lg"
+                    />
+                    <Input
+                    type="number"
+                    name="score"
+                    placeholder="Score"
+                    value={game.score}
+                    onChange={(e) => handleInputChange(index, e)}
+                    className="w-full p-2 text-black placeholder-gray-500 border border-gray-300 rounded-lg"
+                    />
+                    <Input
+                    type="number"
+                    name="price"
+                    placeholder="Price"
+                    value={game.price}
+                    onChange={(e) => handleInputChange(index, e)}
+                    className="w-full p-2 text-black placeholder-gray-500 border border-gray-300 rounded-lg"
+                    />
+                    <Input
+                    type="number"
+                    name="average_time"
+                    placeholder="Time to complete"
+                    value={game.average_time}
+                    onChange={(e) => handleInputChange(index, e)}
+                    className="w-full p-2 text-black placeholder-gray-500 border border-gray-300 rounded-lg"
+                    />
+                </div>
                 <Input
-                type="text"
-                name="name"
-                placeholder="Name of the game"
-                value={game.name}
-                onChange={(e) => handleInputChange(index, e)}
-                className='p-2 m-2 text-black placeholder-gray-500'
+                    type="text"
+                    name="genres"
+                    placeholder="Genres"
+                    value={game.genres.join(", ")}
+                    onChange={(e) => handleInputChange(index, e)}
+                    className="w-full p-2 text-black placeholder-gray-500 border border-gray-300 rounded-lg"
                 />
                 <Input
-                type="number"
-                name="score"
-                placeholder="Score"
-                value={game.score}
-                onChange={(e) => handleInputChange(index, e)}
-                className='p-2 m-2 w-16 text-black placeholder-gray-500'
+                    type="text"
+                    name="available_consoles"
+                    placeholder="Available consoles"
+                    value={game.available_consoles.join(", ")}
+                    onChange={(e) => handleInputChange(index, e)}
+                    className="w-full p-2 text-black placeholder-gray-500 border border-gray-300 rounded-lg"
                 />
-                <Input
-                type="number"
-                name="price"
-                placeholder="Price"
-                value={game.price}
-                onChange={(e) => handleInputChange(index, e)}
-                className='p-2 m-2 w-16 text-black placeholder-gray-500'
-                />
-                <Input
-                type="number"
-                name="average_time"
-                placeholder="Average time to complete (hours)"
-                value={game.average_time}
-                onChange={(e) => handleInputChange(index, e)}
-                className='p-2 m-2 w-16 text-black placeholder-gray-500'
-                />
-                <Input
-                type="text"
-                name="genres"
-                placeholder="Genres"
-                value={game.genres.join(', ')}
-                onChange={(e) => handleInputChange(index, e)}
-                className='p-2 m-2 text-black placeholder-gray-500'
-                />
-                <Input
-                type="text"
-                name="available_consoles"
-                placeholder="Available consoles"
-                value={game.available_consoles.join(', ')}
-                onChange={(e) => handleInputChange(index, e)}
-                className='p-2 m-2 text-black placeholder-gray-500'
-                />
-                <hr className='m-2 border-t-2 border-black'/>
-            </div>
+                <hr className="mt-4 border-t-2 border-gray-400" />
+                </div>
             ))}
-            <div className='flex justify-center'>
-                <Button className='m-2' onClick={addGameInput}>Add Another Game</Button>
-                <Button className='m-2' onClick={fillDummyData}>Fill Dummy Data</Button>
-                <Button className='m-2' onClick={optimize}>Optimize</Button>
+
+            <div className="flex justify-center space-x-4">
+                <Button className="px-4 py-2 bg-blue-500 text-white rounded-lg" onClick={addGameInput}>
+                Add Another Game
+                </Button>
+                <Button className="px-4 py-2 bg-green-500 text-white rounded-lg" onClick={fillDummyData}>
+                Fill Dummy Data
+                </Button>
+                <Button className="px-4 py-2 bg-purple-500 text-white rounded-lg" onClick={optimize}>
+                Optimize
+                </Button>
             </div>
+
             {optimizedGames.length > 0 && (
-                <div>
-                    <h1>Optimized Games</h1>
+                <div className="mt-8">
+                <h2 className="text-lg font-semibold text-center">Optimized Games</h2>
+                <ul className="list-disc list-inside mt-4">
                     {optimizedGames.map((game, index) => (
-                        <div key={index}>
-                            <p>{game.name}</p>
-                        </div>
+                    <li key={index} className="text-center">
+                        {game.name}
+                    </li>
                     ))}
+                </ul>
                 </div>
             )}
         </div>
+
     );
 };
 

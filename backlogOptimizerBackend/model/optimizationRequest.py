@@ -6,3 +6,4 @@ class OptimizationRequest(BaseModel):
     games: List[Game]
     budget: float
     max_time: float
+    owned_consoles: List[str]
