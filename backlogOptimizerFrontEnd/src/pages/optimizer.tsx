@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { MultiSelect, type Option } from "@/components/ui/multiSelect"
+
 
 interface GameData {
     name: string;
@@ -147,14 +148,14 @@ const Optimizer: React.FC = () => {
                 placeholder="Enter budget"
                 value={budget ?? ""}
                 onChange={(e) => setBudget(Number(e.target.value))}
-                className="w-64 p-2 text-black placeholder-gray-500 border border-gray-300 rounded-lg"
+                className="w-64 p-2 placeholder-gray-500 border border-gray-300 rounded-lg"
                 />
                 <Input
                 type="number"
                 placeholder="Enter max time"
                 value={maxTime ?? ""}
                 onChange={(e) => setMaxTime(Number(e.target.value))}
-                className="w-64 p-2 text-black placeholder-gray-500 border border-gray-300 rounded-lg"
+                className="w-64 p-2 placeholder-gray-500 border border-gray-300 rounded-lg"
                 />
                 <MultiSelect
                 options={consoleOptions}
@@ -171,14 +172,14 @@ const Optimizer: React.FC = () => {
                 key={index}
                 className="p-4 m-4 border border-gray-300 rounded-lg shadow-sm space-y-2"
                 >
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-4 ">
                     <Input
                     type="text"
                     name="name"
                     placeholder="Name of the game"
                     value={game.name}
                     onChange={(e) => handleInputChange(index, e)}
-                    className="w-full p-2 text-black placeholder-gray-500 border border-gray-300 rounded-lg"
+                    className="w-full p-2 placeholder-gray-500 border border-gray-300 rounded-lg"
                     />
                     <Input
                     type="number"
@@ -186,7 +187,7 @@ const Optimizer: React.FC = () => {
                     placeholder="Score"
                     value={game.score}
                     onChange={(e) => handleInputChange(index, e)}
-                    className="w-full p-2 text-black placeholder-gray-500 border border-gray-300 rounded-lg"
+                    className="w-full p-2 placeholder-gray-500 border border-gray-300 rounded-lg"
                     />
                     <Input
                     type="number"
@@ -194,7 +195,7 @@ const Optimizer: React.FC = () => {
                     placeholder="Price"
                     value={game.price}
                     onChange={(e) => handleInputChange(index, e)}
-                    className="w-full p-2 text-black placeholder-gray-500 border border-gray-300 rounded-lg"
+                    className="w-full p-2 placeholder-gray-500 border border-gray-300 rounded-lg"
                     />
                     <Input
                     type="number"
@@ -202,7 +203,7 @@ const Optimizer: React.FC = () => {
                     placeholder="Time to complete"
                     value={game.average_time}
                     onChange={(e) => handleInputChange(index, e)}
-                    className="w-full p-2 text-black placeholder-gray-500 border border-gray-300 rounded-lg"
+                    className="w-full p-2 placeholder-gray-500 border border-gray-300 rounded-lg"
                     />
                 </div>
                 <Input
@@ -211,7 +212,7 @@ const Optimizer: React.FC = () => {
                     placeholder="Genres"
                     value={game.genres.join(", ")}
                     onChange={(e) => handleInputChange(index, e)}
-                    className="w-full p-2 text-black placeholder-gray-500 border border-gray-300 rounded-lg"
+                    className="w-full p-2 placeholder-gray-500 border border-gray-300 rounded-lg"
                 />
                 <Input
                     type="text"
@@ -219,20 +220,19 @@ const Optimizer: React.FC = () => {
                     placeholder="Available consoles"
                     value={game.available_consoles.join(", ")}
                     onChange={(e) => handleInputChange(index, e)}
-                    className="w-full p-2 text-black placeholder-gray-500 border border-gray-300 rounded-lg"
+                    className="w-full p-2 placeholder-gray-500 border border-gray-300 rounded-lg"
                 />
-                <hr className="mt-4 border-t-2 border-gray-400" />
                 </div>
             ))}
 
             <div className="flex justify-center space-x-4">
-                <Button className="px-4 py-2 bg-blue-500 text-white rounded-lg" onClick={addGameInput}>
+                <Button variant="outline" className="px-4 py-2" onClick={fillDummyData}>
+                    Fill Dummy Data
+                </Button>
+                <Button variant="outline" className="px-4 py-2" onClick={addGameInput}>
                 Add Another Game
                 </Button>
-                <Button className="px-4 py-2 bg-green-500 text-white rounded-lg" onClick={fillDummyData}>
-                Fill Dummy Data
-                </Button>
-                <Button className="px-4 py-2 bg-purple-500 text-white rounded-lg" onClick={optimize}>
+                <Button className="px-4 py-2 text-black" onClick={optimize}>
                 Optimize
                 </Button>
             </div>
