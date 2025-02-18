@@ -140,8 +140,10 @@ const Optimizer: React.FC = () => {
     };
 
     return (
-        <div className="p-4 m-4">
-            <h1 className="p-2 text-xl font-bold text-center">Backlog Optimizer</h1>
+        <div className="p-4 m-4 mb-20 max-w-5xl items-center justify-center content-center ">
+            <h1 className="mb-4 text-3xl md:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 leading-tight md:leading-normal">
+                Optimizer
+            </h1>
             <div className="mb-6 flex flex-col items-center space-y-4">
                 <Input
                 type="number"

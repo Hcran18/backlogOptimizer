@@ -6,19 +6,43 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { FloatingDock } from "./components/ui/floating-dock";
 import { HiOutlineHome } from "react-icons/hi";
 import { FaChartLine } from "react-icons/fa";
+import { FaRegLightbulb } from "react-icons/fa";
+import { IoConstructOutline } from "react-icons/io5";
+import { IoGiftOutline } from "react-icons/io5";
+import Github from "@/components/github";
 
 function App() {
   const navItems = [
     {
       title: "Home",
-      icon: <HiOutlineHome className="h-full w-full text-neutral-500 dark:text-neutral-300"/>,
+      icon: <HiOutlineHome className="h-full w-full text-neutral-500 dark:text-white"/>,
       href: "/",
     },
     {
       title: "Optimizer",
-      icon: <FaChartLine className="h-full w-full text-neutral-500 dark:text-neutral-300"/>,
+      icon: <FaChartLine className="h-full w-full text-neutral-500 dark:text-white"/>,
       href: "/optimizer",
     },
+    {
+      title: "About the Developer",
+      icon: <FaRegLightbulb className="h-full w-full text-neutral-500 dark:text-white"/>,
+      href: "/about"
+    },
+    {
+      title: "Future Updates",
+      icon: <IoConstructOutline className="h-full w-full text-neutral-500 dark:text-white"/>,
+      href: "/updates"
+    },
+    {
+      title: "GitHub",
+      icon: <Github className="h-full w-full text-neutral-500 dark:text-white"/>,
+      href: "https://github.com/Hcran18/backlogOptimizer"
+    },
+    {
+      title: "Support Me",
+      icon: <IoGiftOutline className="h-full w-full text-neutral-500 dark:text-white"/>,
+      href: "https://buymeacoffee.com/huntercrandall"
+    }
   ];
   
   return (

@@ -7,8 +7,10 @@ import {
   useSpring,
   MotionValue,
 } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
-export const HeroParallax = ({ products }: { products: { title: string; link: string; thumbnail: string }[] }) => {
+export const HeroParallax = ({ products }: { products: { title: string; thumbnail: string }[] }) => {
   const firstRow = products.slice(0, 4); // Keep the first 4 products for the first row
   const secondRow = products.slice(4, 8); // Keep the next 4 products for the second row
   const ref = React.useRef(null);
@@ -26,7 +28,7 @@ export const HeroParallax = ({ products }: { products: { title: string; link: st
   const rotateZ = useSpring(useTransform(scrollYProgress, [0, 0.2], [20, 0]), springConfig);
 
   return (
-    <div ref={ref} className="h-[300vh] w-full antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d] overflow-hidden">
+    <div ref={ref} className="h-[150vh] w-full antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d] overflow-hidden">
       <Header />
       <motion.div
         style={{
@@ -48,7 +50,6 @@ export const HeroParallax = ({ products }: { products: { title: string; link: st
         {/* Second Row - Slightly move it to the left */}
         <motion.div
           className="flex flex-row mb-20 space-x-20"
-          style={{ x: "-12vw" }} // Adjust this value as needed for the left shift
         >
           {secondRow.map((product) => (
             <ProductCard product={product} translate={translateXReverse} key={product.title} />
@@ -66,9 +67,12 @@ export const Header = () => {
         <h1 className="text-4xl md:text-7xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50 leading-tight md:leading-normal">
           Backlogger <br />
         </h1>
-        <p className="mt-6 font-normal text-base text-neutral-300 max-w-lg text-center mx-auto">
-          Optimize the way you play
+        <p className="text-lg md:text-xl font-normal text-neutral-300 max-w-2xl mx-auto">
+          Optimize the Way You Play
         </p>
+        <Button className="mt-6 px-6 py-3 text-lg font-semibold hover:bg-primary/80 transition-all duration-300 rounded-lg">
+          <Link to={"/optimizer"} className="text-black">Get Started</Link>
+        </Button>
       </div>
     </div>
   );
@@ -80,7 +84,6 @@ export const ProductCard = ({
 }: {
   product: {
     title: string;
-    link: string; // You can remove the link here too if it's no longer needed
     thumbnail: string;
   };
   translate: MotionValue<number>;
