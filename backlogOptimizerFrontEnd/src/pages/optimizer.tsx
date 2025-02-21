@@ -1,7 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { MultiSelect, type Option } from "@/components/ui/multiSelect"
+import { LuInfo } from "react-icons/lu";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+  } from "@/components/ui/dialog"
 
 
 interface GameData {
@@ -21,6 +30,15 @@ const Optimizer: React.FC = () => {
     const [budget, setBudget] = useState<number | null>(null);
     const [maxTime, setMaxTime] = useState<number | null>(null);
     const [owned_consoles, setOwnedConsoles] = useState<Option[]>([]);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    useEffect(() => {
+        const hasSeenDialog = localStorage.getItem("hasSeenDialog");
+        if (!hasSeenDialog) {
+            setIsDialogOpen(true);
+            localStorage.setItem("hasSeenDialog", "true");
+        }
+    }, []);
 
     const consoleOptions: Option[] = [
         { value: "Switch", label: "Nintendo Switch" },
@@ -55,6 +73,26 @@ const Optimizer: React.FC = () => {
         { value: "Gameboy", label: "Gameboy" },
         { value: "PSP", label: "PSP"},
         { value: "PC", label: "PC" }
+    ];
+
+    const genreOptions: Option[] = [
+        { value: "Action", label: "Action" },
+        { value: "Adventure", label: "Adventure" },
+        { value: "Platformer", label: "Platformer" },
+        { value: "RPG", label: "RPG" },
+        { value: "Puzzle", label: "Puzzle" },
+        { value: "Horror", label: "Horror" },
+        { value: "Survival", label: "Survival" },
+        { value: "Indie", label: "Indie" },
+        { value: "Open World", label: "Open World" },
+        { value: "Roguelike", label: "Roguelike" },
+        { value: "First-Person Shooter", label: "First-Person Shooter" },
+        { value: "Third-Person Shooter", label: "Third-Person Shooter" },
+        { value: "Metroidvania", label: "Metroidvania" },
+        { value: "Hack and Slash", label: "Hack and Slash" },
+        { value: "Farming Sim", label: "Farming Sim" },
+        { value: "Card Game", label: "Card Game" },
+        { value: "Rhythm", label: "Rhythm" }
     ];
 
     const handleInputChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
@@ -170,7 +208,51 @@ const Optimizer: React.FC = () => {
     };
 
     return (
-        <div className="p-4 m-4 mb-20 max-w-5xl items-center justify-center content-center ">
+        <>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger className="top-4 right-4 absolute">
+                <LuInfo className="h-5 w-5" />
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md w-[90%] max-h-[90vh] overflow-y-auto rounded-lg p-6 scrollbar-hidden">
+                <DialogHeader>
+                    <DialogTitle>How to Optimize Your Game Selection</DialogTitle>
+                    <DialogDescription>
+                        Follow these steps to create the best game lineup based on your budget and available time.
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="py-4 space-y-4">
+                    <p>
+                        <strong>1. Set Your Preferences: </strong>  
+                        Start by entering your budget and the amount of free time you typically have for gaming each week. Then, select the consoles you own and rank your top five favorite genres.
+                    </p>
+
+                    <p>
+                        <strong>2. Add Genre Limits (Optional): </strong>  
+                        If you'd like, you can set a cap on how many games can be chosen per genre. This helps ensure variety, so the optimizer doesn't just select the cheapest options.
+                    </p>
+
+                    <p>
+                        <strong>3. Enter Game Details: </strong>  
+                        Add games by providing the following details:
+                    </p>
+                    <ul className="list-disc list-inside pl-4">
+                        <li>Game name</li>
+                        <li>Score (use <strong>Metacritic</strong> for reference)</li>
+                        <li>Price</li>
+                        <li>Average completion time (check <strong>HowLongToBeat.com</strong>)</li>
+                        <li>Genres</li>
+                        <li>Available platforms</li>
+                    </ul>
+
+                    <p>
+                        <strong>4. Optimize Your Selection: </strong>  
+                        Add as many games as you like, then click <strong>Optimize</strong>. The system will generate the best selection based on your inputs!
+                    </p>
+                </div>
+            </DialogContent>
+        </Dialog>
+
+        <div className="mt-4 mb-20 mx-1 max-w-5xl items-center justify-center content-center ">
             <h1 className="mb-4 text-3xl md:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 leading-tight md:leading-normal">
                 Optimizer
             </h1>
@@ -238,21 +320,15 @@ const Optimizer: React.FC = () => {
                     className="w-full p-2 placeholder-gray-500 border border-gray-300 rounded-lg"
                     />
                 </div>
-                <Input
-                    type="text"
-                    name="genres"
-                    placeholder="Genres"
-                    value={game.genres.join(", ")}
-                    onChange={(e) => handleInputChange(index, e)}
-                    className="w-full p-2 placeholder-gray-500 border border-gray-300 rounded-lg"
-                />
-                <Input
-                    type="text"
-                    name="available_consoles"
-                    placeholder="Available consoles"
-                    value={game.available_consoles.join(", ")}
-                    onChange={(e) => handleInputChange(index, e)}
-                    className="w-full p-2 placeholder-gray-500 border border-gray-300 rounded-lg"
+                <MultiSelect
+                    options={genreOptions}
+                    selected={game.genres.map(genre => ({ value: genre, label: genre }))}
+                    onChange={(selected) => {
+                        const newGames = [...games];
+                        newGames[index].genres = selected.map(option => option.value);
+                        setGames(newGames);
+                    }}
+                    placeholder="Select genres"
                 />
                 </div>
             ))}
@@ -282,7 +358,7 @@ const Optimizer: React.FC = () => {
                 </div>
             )}
         </div>
-
+        </>
     );
 };
 
