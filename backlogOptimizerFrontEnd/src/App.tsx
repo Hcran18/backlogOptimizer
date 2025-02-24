@@ -1,7 +1,8 @@
-import Optimizer from './pages/optimizer'
 import './App.css'
 import { ThemeProvider } from './components/theme-provider'
 import Home from './pages/home'
+import Optimizer from './pages/optimizer'
+import About from './pages/about'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { FloatingDock } from "./components/ui/floating-dock";
 import { HiOutlineHome } from "react-icons/hi";
@@ -24,7 +25,7 @@ function App() {
       href: "/optimizer",
     },
     {
-      title: "About the Developer",
+      title: "About",
       icon: <FaRegLightbulb className="h-full w-full text-neutral-500 dark:text-white"/>,
       href: "/about"
     },
@@ -52,6 +53,7 @@ function App() {
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/optimizer' element={<Optimizer />} />
+            <Route path='/about' element={<About />} />
           </Routes>
           <FloatingDock 
             items={navItems} 
