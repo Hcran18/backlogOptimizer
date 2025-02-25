@@ -1,4 +1,5 @@
 import { HeroParallax } from "@/components/ui/hero-parallax";
+import PriceCards from "@/components/ui/price-cards";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
@@ -65,6 +66,11 @@ function Home() {
           <Button className="px-6 py-3 text-lg font-semibold hover:bg-primary/80 transition-all duration-300 rounded-lg">
             <Link to={"/optimizer"} className="text-black">Try It Out</Link>
           </Button>
+
+        </div>
+
+        <div className="mb-24">
+          <PriceCards />
         </div>
       </>
     

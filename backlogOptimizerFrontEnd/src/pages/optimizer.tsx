@@ -31,6 +31,7 @@ const Optimizer: React.FC = () => {
     const [maxTime, setMaxTime] = useState<number | null>(null);
     const [owned_consoles, setOwnedConsoles] = useState<Option[]>([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isOptimizedDialogOpen, setIsOptimizedDialogOpen] = useState(false);
 
     useEffect(() => {
         const hasSeenDialog = localStorage.getItem("hasSeenDialog");
@@ -143,7 +144,7 @@ const Optimizer: React.FC = () => {
             {"name": "Baldurs Gate 2", "score": 95, "price": 30, "time": 80, "genres": ["RPG"], "available_consoles": ["PC"]},
             {"name": "Grand Theft Auto: San Andreas", "score": 95, "price": 60, "time": 40, "genres": ["Third-Person Shooter", "Action", "Open World"], "available_consoles": ["PC", "PS2", "PS3", "PS4", "XBOX", "XBOX 360", "Switch"]},
             {"name": "Grand Theft Auto: Vice City", "score": 95, "price": 60, "time": 20, "genres": ["Third-Person Shooter", "Action", "Open World"], "available_consoles": ["PC", "PS2", "PS4", "PS5", "XBOX", "XBOX 360", "XBOX One", "XBOX Series", "Switch"]},
-            {"name": "Halo 2", "score": 95, "price": 10, "time": 10, "genres": ["First-Person Shooter"], "available_consoles": ["PC", "XBOX", "XBOX 360", "XBOX 360"]},
+            {"name": "Halo 2", "score": 95, "price": 10, "time": 10, "genres": ["First-Person Shooter"], "available_consoles": ["PC", "XBOX", "XBOX 360"]},
             {"name": "The Legend of Zelda: Majora's Mask", "score": 95, "price": 50, "time": 30, "genres": ["Action", "Adventure"], "available_consoles": ["Switch", "3DS", "N64"]},
             {"name": "The Last of Us", "score": 95, "price": 60, "time": 15, "genres": ["Third-Person Shooter", "Action", "Adventure", "Horror", "Survival"], "available_consoles": ["PC", "PS4", "PS5"]},
             {"name": "The Legend of Zelda: Twilight Princess", "score": 95, "price": 60, "time": 29, "genres": ["Action", "Adventure"], "available_consoles": ["Wii", "Gamecube", "Wii U"]},
@@ -202,6 +203,7 @@ const Optimizer: React.FC = () => {
             const data = JSON.parse(jsonData).games;
     
             setOptimizedGames(data);
+            setIsOptimizedDialogOpen(true);
         } catch (error) {
             console.error('Error:', error);
         }
@@ -330,6 +332,16 @@ const Optimizer: React.FC = () => {
                     }}
                     placeholder="Select genres"
                 />
+                <MultiSelect
+                    options={consoleOptions}
+                    selected={game.available_consoles.map(console => ({ value: console, label: console }))}
+                    onChange={(selected) => {
+                        const newGames = [...games];
+                        newGames[index].available_consoles = selected.map(option => option.value);
+                        setGames(newGames);
+                    }}
+                    placeholder="Select available consoles"
+                />
                 </div>
             ))}
 
@@ -346,16 +358,32 @@ const Optimizer: React.FC = () => {
             </div>
 
             {optimizedGames.length > 0 && (
-                <div className="mt-8">
-                <h2 className="text-lg font-semibold text-center">Optimized Games</h2>
-                <ul className="list-disc list-inside mt-4">
-                    {optimizedGames.map((game, index) => (
-                    <li key={index} className="text-center">
-                        {game.name}
-                    </li>
-                    ))}
-                </ul>
-                </div>
+                <>
+                <Dialog open={isOptimizedDialogOpen} onOpenChange={setIsOptimizedDialogOpen}>
+                    <DialogTrigger asChild>
+                        <Button className=" my-4 px-4 py-2 text-black">
+                            Optimized Games
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-md w-[90%] max-h-[90vh] overflow-y-auto rounded-lg p-6 scrollbar-hidden">
+                        <DialogHeader>
+                            <DialogTitle>Optimized Games</DialogTitle>
+                            <DialogDescription>
+                                Total Price: <strong>${optimizedGames.reduce((total, game) => total + (game.price || 0), 0)}</strong>
+                                <br />
+                                Total Time: <strong>{optimizedGames.reduce((total, game) => total + (game.average_time || 0), 0)} Hours</strong>
+                            </DialogDescription>
+                        </DialogHeader>
+                        <div className="mt-4 space-y-2">
+                            {optimizedGames.map((game, index) => (
+                                <div key={index} className="text-left text-lg font-medium border-b border-gray-300 pb-2">
+                                    {game.name}
+                                </div>
+                            ))}
+                        </div>
+                    </DialogContent>
+                </Dialog>
+                </>
             )}
         </div>
         </>
