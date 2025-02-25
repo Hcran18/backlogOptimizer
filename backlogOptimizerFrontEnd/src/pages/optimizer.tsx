@@ -123,7 +123,7 @@ const Optimizer: React.FC = () => {
     
 
     const addGameInput = () => {
-        setGames([...games, { name: '', price: 0, average_time: 0, genres: [], score: 0, available_consoles: [] }]);
+        setGames([...games, { name: '', price: '', average_time: '', genres: [], score: '', available_consoles: [] }]);
     };
 
     const fillDummyData = () => {
@@ -271,6 +271,7 @@ const Optimizer: React.FC = () => {
                 Optimizer
             </h1>
             <div className="mb-6 flex flex-col items-center space-y-4">
+                <h2 className="text-2xl font-bold">Set Your Preferences</h2>
                 <div className="flex items-center  flex-row space-x-2">
                 <Input
                 type="number"
@@ -303,6 +304,7 @@ const Optimizer: React.FC = () => {
                 />
             </div>
 
+            <h2 className="text-2xl font-bold">Add Games</h2>
             {games.map((game, index) => (
                 <div
                 key={index}
