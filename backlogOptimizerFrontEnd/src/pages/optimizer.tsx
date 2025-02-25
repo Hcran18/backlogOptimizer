@@ -206,20 +206,34 @@ const Optimizer: React.FC = () => {
             owned_consoles: owned_consoles.map(option => option.value),
             favorite_genres: favoriteGenres.map(option => option.value)
         };
-
+    
+        const cacheKey = JSON.stringify(request);
+        const cachedResult = sessionStorage.getItem(cacheKey);
+    
+        // If result is cached, use it instead of making a request
+        if (cachedResult) {
+            setOptimizedGames(JSON.parse(cachedResult));
+            setIsOptimizedDialogOpen(true);
+            return;
+        }
+    
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify( request )
+            body: JSON.stringify(request)
         };
     
         try {
             const response = await fetch('http://localhost:8000/optimize/', requestOptions);
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error(`HTTP error! Status: ${response.status}`);
             }
+            
             const jsonData = await response.json();
             const data = JSON.parse(jsonData).games;
+    
+            // Store the result in sessionStorage
+            sessionStorage.setItem(cacheKey, JSON.stringify(data));
     
             setOptimizedGames(data);
             setIsOptimizedDialogOpen(true);
@@ -227,6 +241,7 @@ const Optimizer: React.FC = () => {
             console.error('Error:', error);
         }
     };
+    
 
     return (
         <>
