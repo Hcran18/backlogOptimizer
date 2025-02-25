@@ -22,6 +22,14 @@ interface GameData {
     available_consoles: string[];
 }
 
+interface RequestData {
+    games: GameData[];
+    budget: number | null;
+    max_time: number | null;
+    owned_consoles: string[];
+    favorite_genres: string[];
+}
+
 const Optimizer: React.FC = () => {
     const [games, setGames] = useState<GameData[]>([
         { name: '', price: '', average_time: '', genres: [], score: '', available_consoles: [] }
@@ -199,7 +207,7 @@ const Optimizer: React.FC = () => {
     };
 
     const optimize = async () => {
-        const request = {
+        const request: RequestData = {
             games,
             budget,
             max_time: maxTime,
