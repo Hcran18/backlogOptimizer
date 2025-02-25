@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { MultiSelect, type Option } from "@/components/ui/multiSelect"
 import { LuInfo } from "react-icons/lu";
+import { X } from "lucide-react"
 import {
     Dialog,
     DialogContent,
@@ -139,6 +140,10 @@ const Optimizer: React.FC = () => {
 
     const addGameInput = () => {
         setGames([...games, { name: '', price: '', average_time: '', genres: [], score: '', available_consoles: [] }]);
+    };
+
+    const removeGame = (index: number) => {
+        setGames(games.filter((_, i) => i !== index));
     };
 
     const fillDummyData = () => {
@@ -340,8 +345,14 @@ const Optimizer: React.FC = () => {
             {games.map((game, index) => (
                 <div
                 key={index}
-                className="p-4 m-4 max-w-[%80] border border-gray-300 rounded-lg shadow-sm space-y-2"
+                className="p-7 m-4 max-w-[%80] border border-gray-300 rounded-lg shadow-sm space-y-2 relative"
                 >
+                    <button
+                        onClick={() => removeGame(index)}
+                        className="absolute top-2 right-2 text-primary hover:text-red-600 transition duration-200"
+                    >
+                        <X className="h-6 w-6" />
+                    </button>
                 <div className="grid grid-cols-2 gap-4 ">
                     <Input
                     type="text"
