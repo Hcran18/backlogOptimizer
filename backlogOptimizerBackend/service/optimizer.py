@@ -5,22 +5,20 @@ from typing import List
 
 
 class Optimizer():
-    genre_weights = {
-        "Metroidvania": 2,
-        "Adventure": 1.8,
-        "Roguelike": 1.5,
-        "RPG": 1.2,
-        "Horror": 0.8,
-        "Sports": 0.5
-    }
+    genre_weights = {}
 
     genre_cap = {"Indie": 3, "Adventure": 2, "Third-Person Shooter": 1}
 
-    def __init__(self, games: List[Game], budget: float, max_time: float, owned_consoles: List[str]):
+    def __init__(self, games: List[Game], budget: float, max_time: float, owned_consoles: List[str], favorite_genres: List[str]):
         self.games = games 
         self.budget = budget
         self.max_time = max_time
         self.owned_consoles = owned_consoles
+        self.favorite_genres = favorite_genres
+
+        # Calculate genre weights based on favorite genres starting with two moving down by .2
+        for i, genre in enumerate(favorite_genres):
+            self.genre_weights[genre] = 2 - (i * 0.2)
 
     @staticmethod
     def calculate_weighted_score(game: Game, genre_weights):

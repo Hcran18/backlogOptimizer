@@ -7,3 +7,4 @@ class OptimizationRequest(BaseModel):
     budget: float
     max_time: float
     owned_consoles: List[str]
+    favorite_genres: List[str]

@@ -30,6 +30,13 @@ const Optimizer: React.FC = () => {
     const [budget, setBudget] = useState<number | null>(null);
     const [maxTime, setMaxTime] = useState<number | null>(null);
     const [owned_consoles, setOwnedConsoles] = useState<Option[]>([]);
+    const [favoriteGenres, setFavoriteGenres] = useState<Option[]>([]);
+
+    const handleFavoriteGenresChange = (selected: Option[]) => {
+        if (selected.length <= 5) {
+            setFavoriteGenres(selected);
+        }
+    };
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isOptimizedDialogOpen, setIsOptimizedDialogOpen] = useState(false);
 
@@ -79,21 +86,25 @@ const Optimizer: React.FC = () => {
     const genreOptions: Option[] = [
         { value: "Action", label: "Action" },
         { value: "Adventure", label: "Adventure" },
-        { value: "Platformer", label: "Platformer" },
-        { value: "RPG", label: "RPG" },
-        { value: "Puzzle", label: "Puzzle" },
-        { value: "Horror", label: "Horror" },
-        { value: "Survival", label: "Survival" },
-        { value: "Indie", label: "Indie" },
-        { value: "Open World", label: "Open World" },
-        { value: "Roguelike", label: "Roguelike" },
-        { value: "First-Person Shooter", label: "First-Person Shooter" },
-        { value: "Third-Person Shooter", label: "Third-Person Shooter" },
-        { value: "Metroidvania", label: "Metroidvania" },
-        { value: "Hack and Slash", label: "Hack and Slash" },
-        { value: "Farming Sim", label: "Farming Sim" },
         { value: "Card Game", label: "Card Game" },
-        { value: "Rhythm", label: "Rhythm" }
+        { value: "Farming Sim", label: "Farming Sim" },
+        { value: "First-Person Shooter", label: "First-Person Shooter" },
+        { value: "Hack and Slash", label: "Hack and Slash" },
+        { value: "Horror", label: "Horror" },
+        { value: "Indie", label: "Indie" },
+        { value: "Metroidvania", label: "Metroidvania" },
+        { value: "Open World", label: "Open World" },
+        { value: "Platformer", label: "Platformer" },
+        { value: "Puzzle", label: "Puzzle" },
+        { value: "Racing", label: "Racing" },
+        { value: "Rhythm", label: "Rhythm" },
+        { value: "Roguelike", label: "Roguelike" },
+        { value: "RPG", label: "RPG" },
+        { value: "Simulation", label: "Simulation" },
+        { value: "Sports", label: "Sports" },
+        { value: "Strategy", label: "Strategy" },
+        { value: "Survival", label: "Survival" },
+        { value: "Third-Person Shooter", label: "Third-Person Shooter" },
     ];
 
     const handleInputChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
@@ -185,7 +196,8 @@ const Optimizer: React.FC = () => {
             games,
             budget,
             max_time: maxTime,
-            owned_consoles: owned_consoles.map(option => option.value)
+            owned_consoles: owned_consoles.map(option => option.value),
+            favorite_genres: favoriteGenres.map(option => option.value)
         };
 
         const requestOptions = {
@@ -254,11 +266,12 @@ const Optimizer: React.FC = () => {
             </DialogContent>
         </Dialog>
 
-        <div className="mt-4 mb-20 mx-1 max-w-5xl items-center justify-center content-center ">
+        <div className="mt-4 mb-20 max-w-5xl items-center justify-center content-center ">
             <h1 className="mb-4 text-3xl md:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 leading-tight md:leading-normal">
                 Optimizer
             </h1>
             <div className="mb-6 flex flex-col items-center space-y-4">
+                <div className="flex items-center  flex-row space-x-2">
                 <Input
                 type="number"
                 placeholder="Enter budget"
@@ -273,6 +286,7 @@ const Optimizer: React.FC = () => {
                 onChange={(e) => setMaxTime(Number(e.target.value))}
                 className="w-64 p-2 placeholder-gray-500 border border-gray-300 rounded-lg"
                 />
+                </div>
                 <MultiSelect
                 options={consoleOptions}
                 selected={owned_consoles}
@@ -281,12 +295,18 @@ const Optimizer: React.FC = () => {
                 }}
                 placeholder="Select owned consoles"
                 />
+                <MultiSelect
+                options={genreOptions}
+                selected={favoriteGenres}
+                onChange={handleFavoriteGenresChange}
+                placeholder="Select favorite genres (max 5, in order of preference)"
+                />
             </div>
 
             {games.map((game, index) => (
                 <div
                 key={index}
-                className="p-4 m-4 border border-gray-300 rounded-lg shadow-sm space-y-2"
+                className="p-4 m-4 max-w-[%80] border border-gray-300 rounded-lg shadow-sm space-y-2"
                 >
                 <div className="grid grid-cols-2 gap-4 ">
                     <Input
