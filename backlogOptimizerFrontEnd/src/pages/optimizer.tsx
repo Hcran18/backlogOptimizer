@@ -107,6 +107,13 @@ const Optimizer: React.FC = () => {
         { value: "Third-Person Shooter", label: "Third-Person Shooter" },
     ];
 
+    const sanitizeText = (value: string) => value.replace(/[^a-zA-Z0-9\s.,!?-]/g, "").trim();
+
+    const sanitizeNumber = (value: string) => {
+        const num = parseFloat(value);
+        return isNaN(num) ? "" : num;
+    };
+
     const handleInputChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         const newGames = [...games];
@@ -114,8 +121,8 @@ const Optimizer: React.FC = () => {
         newGames[index] = {
             ...newGames[index],
             [name]: name === 'price' || name === 'average_time' || name === 'score' 
-                ? value === '' ? '' : parseFloat(value) 
-                : value
+                ? sanitizeNumber(value)
+                : sanitizeText(value)
         };
     
         setGames(newGames);
@@ -278,6 +285,7 @@ const Optimizer: React.FC = () => {
                 placeholder="Enter budget"
                 value={budget ?? ""}
                 onChange={(e) => setBudget(Number(e.target.value))}
+                maxLength={10}
                 className="w-64 p-2 placeholder-gray-500 border border-gray-300 rounded-lg"
                 />
                 <Input
@@ -285,6 +293,7 @@ const Optimizer: React.FC = () => {
                 placeholder="Enter max time"
                 value={maxTime ?? ""}
                 onChange={(e) => setMaxTime(Number(e.target.value))}
+                maxLength={10}
                 className="w-64 p-2 placeholder-gray-500 border border-gray-300 rounded-lg"
                 />
                 </div>
@@ -317,6 +326,7 @@ const Optimizer: React.FC = () => {
                     placeholder="Name of the game"
                     value={game.name}
                     onChange={(e) => handleInputChange(index, e)}
+                    maxLength={100}
                     className="w-full p-2 placeholder-gray-500 border border-gray-300 rounded-lg"
                     />
                     <Input
@@ -325,6 +335,7 @@ const Optimizer: React.FC = () => {
                     placeholder="Score"
                     value={game.score}
                     onChange={(e) => handleInputChange(index, e)}
+                    maxLength={3}
                     className="w-full p-2 placeholder-gray-500 border border-gray-300 rounded-lg"
                     />
                     <Input
@@ -333,6 +344,7 @@ const Optimizer: React.FC = () => {
                     placeholder="Price"
                     value={game.price}
                     onChange={(e) => handleInputChange(index, e)}
+                    maxLength={10}
                     className="w-full p-2 placeholder-gray-500 border border-gray-300 rounded-lg"
                     />
                     <Input
@@ -341,6 +353,7 @@ const Optimizer: React.FC = () => {
                     placeholder="Time to complete"
                     value={game.average_time}
                     onChange={(e) => handleInputChange(index, e)}
+                    maxLength={10}
                     className="w-full p-2 placeholder-gray-500 border border-gray-300 rounded-lg"
                     />
                 </div>
