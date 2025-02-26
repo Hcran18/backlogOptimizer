@@ -46,7 +46,7 @@ const data = [
         content: (
             <div className="text-left">
                 <p className="text-neutral-800 dark:text-neutral-200 text-sm md:text-base font-normal mb-4">
-                    As we continue to evolve <strong>Backlogger</strong>, I am planning features that will make game tracking more social, personalized, and intelligent.
+                    As I continue to evolve <strong>Backlogger</strong>, I am planning features that will make game tracking more social, personalized, and intelligent.
                 </p>
 
                 <ul className="list-disc list-inside text-neutral-800 dark:text-neutral-200 text-sm md:text-base font-normal space-y-2">
