@@ -429,11 +429,6 @@ const Optimizer: React.FC = () => {
             {optimizedGames.length > 0 && (
                 <>
                 <Dialog open={isOptimizedDialogOpen} onOpenChange={setIsOptimizedDialogOpen}>
-                    <DialogTrigger asChild>
-                        <Button className=" my-4 px-4 py-2 text-black">
-                            Optimized Games
-                        </Button>
-                    </DialogTrigger>
                     <DialogContent className="sm:max-w-md w-[90%] max-h-[90vh] overflow-y-auto rounded-lg p-6 scrollbar-hidden">
                         <DialogHeader>
                             <DialogTitle>Optimized Games</DialogTitle>
