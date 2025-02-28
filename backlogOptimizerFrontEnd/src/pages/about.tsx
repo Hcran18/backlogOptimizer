@@ -42,7 +42,7 @@ function About() {
         {/* About the app and it's development */}
         <StickyScroll content={content}/>
         {/* Link to developer website */}
-        <div className="mb-4 text-center">
+        <div className="mb-12 text-center p-1">
             <p className="text-lg text-neutral-300">
             Check out more of my work at  
             <a

@@ -310,20 +310,20 @@ const Optimizer: React.FC = () => {
             </DialogContent>
         </Dialog>
 
-        <div className="mt-4 mb-20 max-w-5xl items-center justify-center content-center ">
+        <div className="mt-4 mb-28 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
             <h1 className="mb-4 text-3xl md:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 leading-tight md:leading-normal">
                 Optimizer
             </h1>
             <div className="mb-6 flex flex-col items-center space-y-4">
                 <h2 className="text-2xl font-bold">Set Your Preferences</h2>
-                <div className="flex items-center  flex-row space-x-2">
+                <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2">
                 <Input
                 type="number"
                 placeholder="Enter budget"
                 value={budget ?? ""}
                 onChange={(e) => setBudget(Number(e.target.value))}
                 maxLength={10}
-                className="w-64 p-2 placeholder-gray-500 border border-gray-300 rounded-lg"
+                className="w-full sm:w-64 p-2 placeholder-gray-500 border border-gray-300 rounded-lg"
                 />
                 <Input
                 type="number"
@@ -331,7 +331,7 @@ const Optimizer: React.FC = () => {
                 value={maxTime ?? ""}
                 onChange={(e) => setMaxTime(Number(e.target.value))}
                 maxLength={10}
-                className="w-64 p-2 placeholder-gray-500 border border-gray-300 rounded-lg"
+                className="w-full sm:w-64 p-2 placeholder-gray-500 border border-gray-300 rounded-lg"
                 />
                 </div>
                 <MultiSelect
@@ -340,13 +340,13 @@ const Optimizer: React.FC = () => {
                 onChange={(selected) => {
                     setOwnedConsoles(selected);
                 }}
-                placeholder="Select owned consoles"
+                placeholder="Consoles you own"
                 />
                 <MultiSelect
                 options={genreOptions}
                 selected={favoriteGenres}
                 onChange={handleFavoriteGenresChange}
-                placeholder="Select favorite genres (max 5, in order of preference)"
+                placeholder="Favorite genres (max 5, preference order)"
                 />
             </div>
 
@@ -354,7 +354,7 @@ const Optimizer: React.FC = () => {
             {games.map((game, index) => (
                 <div
                 key={index}
-                className="p-7 m-4 max-w-[%80] border border-gray-300 rounded-lg shadow-sm space-y-2 relative"
+                className="p-7 m-4 max-w-full border border-gray-300 rounded-lg shadow-sm space-y-2 relative"
                 >
                     <button
                         onClick={() => removeGame(index)}
@@ -362,7 +362,7 @@ const Optimizer: React.FC = () => {
                     >
                         <X className="h-6 w-6" />
                     </button>
-                <div className="grid grid-cols-2 gap-4 ">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <Input
                     type="text"
                     name="name"
@@ -423,7 +423,7 @@ const Optimizer: React.FC = () => {
                 </div>
             ))}
 
-            <div className="flex justify-center space-x-4">
+            <div className="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-4">
                 <Button variant="outline" className="px-4 py-2" onClick={fillDummyData}>
                     Fill Dummy Data
                 </Button>
