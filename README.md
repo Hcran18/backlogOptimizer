@@ -1,5 +1,9 @@
 # Backlog Optimizer
 
+## Status
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/c6c8c6fe-4b4d-4f26-81d7-3715fe562bed/deploy-status)](https://app.netlify.com/sites/gamingbacklogger/deploys)
+
 ## Overview
 
 Backlog Optimizer is a web-based application designed to help users organize and prioritize their game backlog. With an intelligent optimization algorithm, the app streamlines game prioritization based on various factors such as score, price, and completion time. Future features like account creation, wishlisting, and calendar scheduling will make managing your gaming experience more seamless and enjoyable.
