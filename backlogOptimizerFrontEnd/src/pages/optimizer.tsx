@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { MultiSelect, type Option } from "@/components/ui/multiSelect"
@@ -40,6 +40,7 @@ const Optimizer: React.FC = () => {
     const [maxTime, setMaxTime] = useState<number | null>(null);
     const [owned_consoles, setOwnedConsoles] = useState<Option[]>([]);
     const [favoriteGenres, setFavoriteGenres] = useState<Option[]>([]);
+    const optimizedGamesMemo = useMemo(() => optimizedGames, [optimizedGames]);
 
     const handleFavoriteGenresChange = (selected: Option[]) => {
         if (selected.length <= 5) {
@@ -221,9 +222,17 @@ const Optimizer: React.FC = () => {
         };
     
         const cacheKey = JSON.stringify(request);
+
+        // Short term cache
+        if (optimizedGamesMemo.length > 0) {
+            setOptimizedGames(optimizedGamesMemo);
+            setIsOptimizedDialogOpen(true);
+            return;
+        }
+
         const cachedResult = sessionStorage.getItem(cacheKey);
     
-        // If result is cached, use it instead of making a request
+        // Persistantly store the result in sessionStorage
         if (cachedResult) {
             setOptimizedGames(JSON.parse(cachedResult));
             setIsOptimizedDialogOpen(true);
