@@ -24,7 +24,7 @@ def read_root():
 def read_root(request: OptimizationRequest):
     start_time = time.time()
     
-    optimizer = Optimizer(request.games, request.budget, request.max_time, request.owned_consoles, request.favorite_genres)
+    optimizer = Optimizer(request.games, request.budget, request.max_time, request.owned_consoles, request.favorite_genres, request.genre_caps)
     result = optimizer.optimize()
     
     end_time = time.time()

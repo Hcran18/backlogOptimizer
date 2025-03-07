@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { MultiSelect, type Option } from "@/components/ui/multiSelect"
 import { LuInfo } from "react-icons/lu";
+import { IoAddOutline } from "react-icons/io5";
 import { X } from "lucide-react"
 import {
     Dialog,
@@ -29,6 +30,7 @@ interface RequestData {
     max_time: number | null;
     owned_consoles: string[];
     favorite_genres: string[];
+    genre_caps: { [key: string]: number };
 }
 
 const Optimizer: React.FC = () => {
@@ -40,7 +42,8 @@ const Optimizer: React.FC = () => {
     const [maxTime, setMaxTime] = useState<number | null>(null);
     const [owned_consoles, setOwnedConsoles] = useState<Option[]>([]);
     const [favoriteGenres, setFavoriteGenres] = useState<Option[]>([]);
-    const optimizedGamesMemo = useMemo(() => optimizedGames, [optimizedGames]);
+    const [genreCaps, setGenreCaps] = useState<{ [key: string]: number }>({});
+    const [genreCapInputs, setGenreCapInputs] = useState<{ genre: Option | null, cap: number | '' }[]>([{ genre: null, cap: '' }]);
 
     const handleFavoriteGenresChange = (selected: Option[]) => {
         if (selected.length <= 5) {
@@ -119,9 +122,9 @@ const Optimizer: React.FC = () => {
 
     const sanitizeText = (value: string) => value.replace(/[^a-zA-Z0-9\s.,!?-]/g, "").trim();
 
-    const sanitizeNumber = (value: string) => {
+    const sanitizeNumber = (value: string): number => {
         const num = parseFloat(value);
-        return isNaN(num) ? "" : num;
+        return isNaN(num) ? 0 : num;
     };
 
     const handleInputChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
@@ -137,7 +140,55 @@ const Optimizer: React.FC = () => {
     
         setGames(newGames);
     };
+
+    const handleGenreCapChange = (index: number, field: 'genre' | 'cap', value: any) => {
+        setGenreCapInputs((prevInputs) => {
+            const newInputs = [...prevInputs];
+            const oldGenre = newInputs[index].genre?.value; // Get old genre before updating
+            
+            if (field === 'genre') {
+                newInputs[index].genre = value;
+            } else {
+                newInputs[index].cap = sanitizeNumber(value);
+            }
     
+            // Update genreCaps
+            setGenreCaps((prevGenreCaps) => {
+                const updatedGenreCaps = { ...prevGenreCaps };
+    
+                // Remove old genre if changed
+                if (field === 'genre' && oldGenre && oldGenre !== value?.value) {
+                    delete updatedGenreCaps[oldGenre];
+                }
+    
+                // Add/update the new genre
+                if (newInputs[index].genre) {
+                    updatedGenreCaps[newInputs[index].genre.value] = newInputs[index].cap === '' ? 0 : newInputs[index].cap;
+                }
+    
+                return updatedGenreCaps;
+            });
+    
+            return newInputs;
+        });
+    };
+    
+
+    const addGenreCapInput = () => {
+        setGenreCapInputs([...genreCapInputs, { genre: null, cap: '' }]);
+    };
+
+    const removeGenreCapInput = (index: number) => {
+        const newGenreCapInputs = genreCapInputs.filter((_, i) => i !== index);
+        setGenreCapInputs(newGenreCapInputs);
+
+        // Update genreCaps state
+        const newGenreCaps = { ...genreCaps };
+        if (genreCapInputs[index].genre) {
+            delete newGenreCaps[genreCapInputs[index].genre.value];
+        }
+        setGenreCaps(newGenreCaps);
+    };
 
     const addGameInput = () => {
         setGames([...games, { name: '', price: '', average_time: '', genres: [], score: '', available_consoles: [] }]);
@@ -218,26 +269,10 @@ const Optimizer: React.FC = () => {
             budget,
             max_time: maxTime,
             owned_consoles: owned_consoles.map(option => option.value),
-            favorite_genres: favoriteGenres.map(option => option.value)
+            favorite_genres: favoriteGenres.map(option => option.value),
+            genre_caps: genreCaps
         };
     
-        const cacheKey = JSON.stringify(request);
-
-        // Short term cache
-        if (optimizedGamesMemo.length > 0) {
-            setOptimizedGames(optimizedGamesMemo);
-            setIsOptimizedDialogOpen(true);
-            return;
-        }
-
-        const cachedResult = sessionStorage.getItem(cacheKey);
-    
-        // Persistantly store the result in sessionStorage
-        if (cachedResult) {
-            setOptimizedGames(JSON.parse(cachedResult));
-            setIsOptimizedDialogOpen(true);
-            return;
-        }
     
         const requestOptions = {
             method: 'POST',
@@ -253,9 +288,6 @@ const Optimizer: React.FC = () => {
             
             const jsonData = await response.json();
             const data = JSON.parse(jsonData).games;
-    
-            // Store the result in sessionStorage
-            sessionStorage.setItem(cacheKey, JSON.stringify(data));
     
             setOptimizedGames(data);
             setIsOptimizedDialogOpen(true);
@@ -314,40 +346,83 @@ const Optimizer: React.FC = () => {
             <h1 className="mb-4 text-3xl md:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 leading-tight md:leading-normal">
                 Optimizer
             </h1>
-            <div className="mb-6 flex flex-col items-center space-y-4">
-                <h2 className="text-2xl font-bold">Set Your Preferences</h2>
-                <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2">
-                <Input
-                type="number"
-                placeholder="Enter budget"
-                value={budget ?? ""}
-                onChange={(e) => setBudget(Number(e.target.value))}
-                maxLength={10}
-                className="w-full sm:w-64 p-2 placeholder-gray-500 border border-gray-300 rounded-lg"
-                />
-                <Input
-                type="number"
-                placeholder="Enter max time"
-                value={maxTime ?? ""}
-                onChange={(e) => setMaxTime(Number(e.target.value))}
-                maxLength={10}
-                className="w-full sm:w-64 p-2 placeholder-gray-500 border border-gray-300 rounded-lg"
-                />
+            <div className="mb-6 w-full">
+                <h2 className="text-2xl font-bold text-center">Set Your Preferences</h2>
+
+                {/* Budget & Max Time */}
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-4">
+                    <Input
+                        type="number"
+                        placeholder="Enter budget"
+                        value={budget ?? ""}
+                        onChange={(e) => setBudget(Number(e.target.value))}
+                        maxLength={10}
+                        className="w-full sm:w-64 p-2 border border-gray-300 rounded-lg"
+                    />
+                    <Input
+                        type="number"
+                        placeholder="Enter max time"
+                        value={maxTime ?? ""}
+                        onChange={(e) => setMaxTime(Number(e.target.value))}
+                        maxLength={10}
+                        className="w-full sm:w-64 p-2 border border-gray-300 rounded-lg"
+                    />
                 </div>
-                <MultiSelect
-                options={consoleOptions}
-                selected={owned_consoles}
-                onChange={(selected) => {
-                    setOwnedConsoles(selected);
-                }}
-                placeholder="Consoles you own"
-                />
-                <MultiSelect
-                options={genreOptions}
-                selected={favoriteGenres}
-                onChange={handleFavoriteGenresChange}
-                placeholder="Favorite genres (max 5, preference order)"
-                />
+
+                {/* Console & Favorite Genre Selection */}
+                <div className="mt-6 space-y-4">
+                    <MultiSelect
+                        options={consoleOptions}
+                        selected={owned_consoles}
+                        onChange={(selected) => setOwnedConsoles(selected)}
+                        placeholder="Consoles you own"
+                    />
+                    <MultiSelect
+                        options={genreOptions}
+                        selected={favoriteGenres}
+                        onChange={handleFavoriteGenresChange}
+                        placeholder="Favorite genres (max 5, preference order)"
+                    />
+                </div>
+
+                {/* Genre Cap Section */}
+                <div className="mt-6 w-full">
+                    <h3 className="text-lg font-semibold text-center">Genre Caps</h3>
+                    <div className="flex flex-col space-y-3 mt-2">
+                        {genreCapInputs.map((input, index) => (
+                            <div key={index} className="flex items-center gap-3 border p-3 rounded-lg shadow-sm">
+                                <MultiSelect
+                                    options={genreOptions}
+                                    selected={input.genre ? [input.genre] : []}
+                                    onChange={(selected) => handleGenreCapChange(index, 'genre', selected[0] || null)}
+                                    placeholder="Select genre"
+                                />
+                                <Input
+                                    type="number"
+                                    placeholder="Cap"
+                                    value={input.cap}
+                                    onChange={(e) => handleGenreCapChange(index, 'cap', e.target.value)}
+                                    maxLength={10}
+                                    className="w-24 p-2 border border-gray-300 rounded-lg"
+                                />
+                                <button 
+                                    className="text-red-500 hover:text-red-700"
+                                    onClick={() => removeGenreCapInput(index)}
+                                >
+                                    <X className="h-5 w-5" />
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                    <Button
+                        variant="ghost"
+                        className="mt-3 flex items-center justify-center"
+                        onClick={addGenreCapInput}
+                    >
+                        <IoAddOutline className="h-5 w-5" />
+                        <span className="ml-1">Add Genre Cap</span>
+                    </Button>
+                </div>
             </div>
 
             <h2 className="text-2xl font-bold">Add Games</h2>
@@ -358,7 +433,7 @@ const Optimizer: React.FC = () => {
                 >
                     <button
                         onClick={() => removeGame(index)}
-                        className="absolute top-2 right-2 text-primary hover:text-red-600 transition duration-200"
+                        className="absolute top-2 right-2 text-red-500 hover:text-red-700"
                     >
                         <X className="h-6 w-6" />
                     </button>

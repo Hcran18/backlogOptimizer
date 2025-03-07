@@ -5,16 +5,17 @@ from typing import List
 
 
 class Optimizer():
+
     genre_weights = {}
+    genre_cap = {}
 
-    genre_cap = {"Indie": 3, "Adventure": 2, "Third-Person Shooter": 1}
-
-    def __init__(self, games: List[Game], budget: float, max_time: float, owned_consoles: List[str], favorite_genres: List[str]):
+    def __init__(self, games: List[Game], budget: float, max_time: float, owned_consoles: List[str], favorite_genres: List[str], genre_caps: dict):
         self.games = games 
         self.budget = budget
         self.max_time = max_time
         self.owned_consoles = owned_consoles
         self.favorite_genres = favorite_genres
+        self.genre_cap = genre_caps
 
         # Calculate genre weights based on favorite genres starting with two moving down by .2
         for i, genre in enumerate(favorite_genres):

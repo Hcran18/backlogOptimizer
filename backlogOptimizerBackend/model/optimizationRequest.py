@@ -8,3 +8,4 @@ class OptimizationRequest(BaseModel):
     max_time: float = Field(..., ge=0) # must be greater than or equal to 0
     owned_consoles: List[str] 
     favorite_genres: List[str]
+    genre_caps: dict
