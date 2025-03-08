@@ -1,0 +1,25 @@
+import { type Option } from "@/components/ui/multiSelect"
+
+export const genreOptions: Option[] = [
+        { value: "Action", label: "Action" },
+        { value: "Adventure", label: "Adventure" },
+        { value: "Card Game", label: "Card Game" },
+        { value: "Farming Sim", label: "Farming Sim" },
+        { value: "First-Person Shooter", label: "First-Person Shooter" },
+        { value: "Hack and Slash", label: "Hack and Slash" },
+        { value: "Horror", label: "Horror" },
+        { value: "Indie", label: "Indie" },
+        { value: "Metroidvania", label: "Metroidvania" },
+        { value: "Open World", label: "Open World" },
+        { value: "Platformer", label: "Platformer" },
+        { value: "Puzzle", label: "Puzzle" },
+        { value: "Racing", label: "Racing" },
+        { value: "Rhythm", label: "Rhythm" },
+        { value: "Roguelike", label: "Roguelike" },
+        { value: "RPG", label: "RPG" },
+        { value: "Simulation", label: "Simulation" },
+        { value: "Sports", label: "Sports" },
+        { value: "Strategy", label: "Strategy" },
+        { value: "Survival", label: "Survival" },
+        { value: "Third-Person Shooter", label: "Third-Person Shooter" },
+    ];
