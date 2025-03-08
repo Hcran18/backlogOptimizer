@@ -16,9 +16,9 @@ app.add_middleware(
     allow_headers=["Content-Type"],
 )
 
-@app.get("/")
+@app.get("/health")
 def read_root():
-    return {"Hello": "World"}
+    return {"status": "ok"}
 
 @app.post("/optimize/")
 def read_root(request: OptimizationRequest):

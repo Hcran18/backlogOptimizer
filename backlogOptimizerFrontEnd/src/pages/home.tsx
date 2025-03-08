@@ -69,7 +69,7 @@ function Home() {
 
         </div>
 
-        <div className="mb-24">
+        <div className="mb-24 mx-2">
           <PriceCards />
         </div>
       </>

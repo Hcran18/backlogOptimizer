@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { MultiSelect, type Option } from "@/components/ui/multiSelect"
-import { LuInfo } from "react-icons/lu";
-import { IoAddOutline } from "react-icons/io5";
-import { X } from "lucide-react"
 import {
     Dialog,
     DialogContent,
@@ -13,6 +10,11 @@ import {
     DialogTitle,
     DialogTrigger,
   } from "@/components/ui/dialog"
+import useSeenDialog from '@/components/customHooks/useSeenDialog';
+import { sanitizeText, sanitizeNumber } from '@/lib/utils';
+import { LuInfo } from "react-icons/lu";
+import { IoAddOutline } from "react-icons/io5";
+import { X } from "lucide-react"
 
 
 interface GameData {
@@ -44,22 +46,14 @@ const Optimizer: React.FC = () => {
     const [favoriteGenres, setFavoriteGenres] = useState<Option[]>([]);
     const [genreCaps, setGenreCaps] = useState<{ [key: string]: number }>({});
     const [genreCapInputs, setGenreCapInputs] = useState<{ genre: Option | null, cap: number | '' }[]>([{ genre: null, cap: '' }]);
+    const [isDialogOpen, setIsDialogOpen] = useSeenDialog();
+    const [isOptimizedDialogOpen, setIsOptimizedDialogOpen] = useState(false);
 
     const handleFavoriteGenresChange = (selected: Option[]) => {
         if (selected.length <= 5) {
             setFavoriteGenres(selected);
         }
     };
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [isOptimizedDialogOpen, setIsOptimizedDialogOpen] = useState(false);
-
-    useEffect(() => {
-        const hasSeenDialog = localStorage.getItem("hasSeenDialog");
-        if (!hasSeenDialog) {
-            setIsDialogOpen(true);
-            localStorage.setItem("hasSeenDialog", "true");
-        }
-    }, []);
 
     const consoleOptions: Option[] = [
         { value: "Switch", label: "Nintendo Switch" },
@@ -119,13 +113,6 @@ const Optimizer: React.FC = () => {
         { value: "Survival", label: "Survival" },
         { value: "Third-Person Shooter", label: "Third-Person Shooter" },
     ];
-
-    const sanitizeText = (value: string) => value.replace(/[^a-zA-Z0-9\s.,!?-]/g, "").trim();
-
-    const sanitizeNumber = (value: string): number => {
-        const num = parseFloat(value);
-        return isNaN(num) ? 0 : num;
-    };
 
     const handleInputChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
