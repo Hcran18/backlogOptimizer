@@ -268,7 +268,7 @@ const Optimizer: React.FC = () => {
         };
     
         try {
-            const response = await fetch('http://localhost:8000/optimize/', requestOptions);
+            const response = await fetch('https://backlogoptimizer.onrender.com/optimize/', requestOptions);
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
