@@ -5,6 +5,8 @@ import InstructionsDialog from '@/components/instructionsDialog';
 import OptimizedDialog from '@/components/optimizedDialog';
 import useSeenDialog from '@/components/customHooks/useSeenDialog';
 import { dummyData } from '@/components/data/dummyData';
+import { LoadingStates } from '@/components/data/loadingStates';
+import { MultiStepLoader as Loader } from '@/components/ui/multi-step-loader';
 import { Button } from '@/components/ui/button';
 import { type Option } from "@/components/ui/multiSelect"
 import { sanitizeText, sanitizeNumber } from '@/lib/utils';
@@ -40,6 +42,7 @@ const Optimizer: React.FC = () => {
     const [genreCapInputs, setGenreCapInputs] = useState<{ genre: Option | null, cap: number | '' }[]>([{ genre: null, cap: '' }]);
     const [isDialogOpen, setIsDialogOpen] = useSeenDialog();
     const [isOptimizedDialogOpen, setIsOptimizedDialogOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleFavoriteGenresChange = (selected: Option[]) => {
         if (selected.length <= 5) {
@@ -144,6 +147,7 @@ const Optimizer: React.FC = () => {
         };
     
         try {
+            setLoading(true);
             const response = await fetch('https://backlogoptimizer.onrender.com/optimize/', requestOptions);
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
@@ -151,17 +155,22 @@ const Optimizer: React.FC = () => {
             
             const jsonData = await response.json();
             const data = JSON.parse(jsonData).games;
-    
-            setOptimizedGames(data);
-            setIsOptimizedDialogOpen(true);
+
+            setTimeout(() => {
+                setOptimizedGames(data);
+                setLoading(false);
+                setIsOptimizedDialogOpen(true);
+            }, 18000);
         } catch (error) {
             console.error('Error:', error);
+            setLoading(false);
         }
     };
     
 
     return (
         <>
+        <Loader loadingStates={LoadingStates} loading={loading} duration={3000} />
         <InstructionsDialog isDialogOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} />
 
         <div className="mt-4 mb-28 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
