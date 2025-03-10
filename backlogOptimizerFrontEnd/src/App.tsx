@@ -1,9 +1,10 @@
 import './App.css'
+import { lazy } from 'react'
 import { ThemeProvider } from './components/theme-provider'
-import Home from './pages/home'
-import Optimizer from './pages/optimizer'
-import About from './pages/about'
-import { Updates }  from './pages/updates'
+const Home = lazy(() => import('./pages/home'));
+const Optimizer = lazy(() => import('./pages/optimizer'));
+const About = lazy(() => import('./pages/about'));
+const Updates = lazy(() => import('./pages/updates'));
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { FloatingDock } from "./components/ui/floating-dock";
 import { HiOutlineHome } from "react-icons/hi";

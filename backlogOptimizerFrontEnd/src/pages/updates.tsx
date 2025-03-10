@@ -1,6 +1,6 @@
 import { Timeline } from "@/components/ui/timeline";
 
-export function Updates() {
+function Updates() {
 const data = [
     {
         title: "Backlogger v1.0",
@@ -76,3 +76,5 @@ const data = [
     </>
   );
 }
+
+export default Updates;
