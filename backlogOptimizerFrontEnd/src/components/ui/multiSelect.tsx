@@ -38,7 +38,7 @@ export function MultiSelect({ options, selected, onChange, placeholder = "Select
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" role="combobox" aria-expanded={open} className="w-full justify-between">
+        <Button variant="outline" role="combobox" aria-expanded={open} onTouchStart={(e) => e.preventDefault()} className="w-full justify-between">
           {selected.length > 0 ? (
             <div className="flex flex-wrap gap-1">
               {selected.map((option) => (
