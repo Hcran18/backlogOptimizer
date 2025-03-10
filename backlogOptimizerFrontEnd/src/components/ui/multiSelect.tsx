@@ -72,7 +72,7 @@ export function MultiSelect({ options, selected, onChange, placeholder = "Select
       </PopoverTrigger>
       <PopoverContent className="w-full p-0">
         <Command>
-          <CommandInput placeholder="Search options..." />
+          <CommandInput onFocus={(e) => e.preventDefault()} placeholder="Search options..." />
           <CommandList>
             <CommandEmpty>No option found.</CommandEmpty>
             <CommandGroup>
