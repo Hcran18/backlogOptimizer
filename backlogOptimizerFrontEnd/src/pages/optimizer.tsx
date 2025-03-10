@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Preferences from '@/components/preferences';
 import GamesForm from '@/components/gamesForm';
 import InstructionsDialog from '@/components/instructionsDialog';
@@ -50,7 +50,7 @@ const Optimizer: React.FC = () => {
         }
     };
 
-    const handleInputChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = async (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         const newGames = [...games];
     
@@ -130,6 +130,17 @@ const Optimizer: React.FC = () => {
     };
 
     const optimize = async () => {
+        // error handling
+        if (budget === null || maxTime === null || favoriteGenres.length === 0 || owned_consoles.length === 0) {
+            alert('Please fill out all fields.');
+            return;
+        }
+
+        if (games.some(game => game.name === '' || game.price === '' || game.average_time === '' || game.score === '' || game.genres.length === 0 || game.available_consoles.length === 0)) {
+            alert('Please fill out all fields for each game.');
+            return;
+        }
+
         const request: RequestData = {
             games,
             budget,
@@ -160,7 +171,7 @@ const Optimizer: React.FC = () => {
                 setOptimizedGames(data);
                 setLoading(false);
                 setIsOptimizedDialogOpen(true);
-            }, 18000);
+            }, 14000);
         } catch (error) {
             console.error('Error:', error);
             setLoading(false);

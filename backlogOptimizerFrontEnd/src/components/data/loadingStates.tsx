@@ -13,8 +13,5 @@ export const LoadingStates = [
     }, 
     {
         text: 'Finalizing results...',
-    }, 
-    {
-        text: 'Done!',
-    }
+    },
 ];
